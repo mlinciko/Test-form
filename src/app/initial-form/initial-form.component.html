@@ -1,0 +1,89 @@
+<div class="container">
+  <form novalidate [formGroup]="notifyMeForm" (ngSubmit)="onSubmit()">
+    <!-- первая часть формы -->
+    <div class="initial-data" #initialDataForm>
+      <label for="first-name">Введите имя</label>
+      <input formControlName="firstName" type="text" name="first-name" id="first-name" required>
+      <div *ngIf="notifyMeForm.get('firstName')?.touched && notifyMeForm.get('firstName')?.invalid" class="message">
+        <div *ngIf="notifyMeForm.get('firstName')?.errors?.['required']">
+          Это поле обязательно
+        </div>
+      </div>
+      <label for="first-name">Введите фамилию</label>
+      <input formControlName="lastName" type="text" name="last-name" id="last-name" required>
+      <div *ngIf="notifyMeForm.get('lastName')?.touched && notifyMeForm.get('lastName')?.invalid" class="message">
+        <div *ngIf="notifyMeForm.get('lastName')?.errors?.['required']">
+          Это поле обязательно
+        </div>
+      </div>
+      <!-- кнопка переключения к следующей части формы(кнопка неактивна, пока значения полей невалидны) -->
+      <a (click)="changeVisibility(initialDataForm, mainDataForm)" 
+      [class.disabled]="notifyMeForm.get('firstName')?.invalid || notifyMeForm.get('lastName')?.invalid">
+        Дальше
+      </a>
+    </div>
+    <!-- вторая часть формы -->
+    <div class="main-data" #mainDataForm>
+      <!-- кнопка переключения к предыдущей части формы -->
+      <a (click)="changeVisibility(mainDataForm, initialDataForm)" class="go-back">&#5176; назад</a>
+      <label for="email">Введите email</label>
+      <input formControlName="email" type="email" name="email" id="email" required>
+      <div *ngIf="notifyMeForm.get('email')?.touched && notifyMeForm.get('email')?.invalid" class="message">
+        <div *ngIf="notifyMeForm.get('email')?.errors?.['required']">
+          Это поле обязательно
+        </div>
+        <div *ngIf="notifyMeForm.get('email')?.errors?.['email']">
+          Неверно введён email
+        </div>
+      </div>
+      <label for="tel">Введите номер телефона</label>
+      <input formControlName="tel" type="tel" name="tel" id="tel" required>
+      <div *ngIf="notifyMeForm.get('tel')?.touched && notifyMeForm.get('tel')?.invalid" class="message">
+        <div *ngIf="notifyMeForm.get('tel')?.errors?.['required']">
+          Это поле обязательно
+        </div>
+        <div *ngIf="notifyMeForm.get('tel')?.errors?.['pattern']">
+          Неверно введён номер телефона
+        </div>
+      </div>
+      <label for="address">Введите адрес</label>
+      <input [(ngModel)]="selectedAddress" (click)="changeModalDialogVisibility('')" formControlName="address" type="text" name="address" id="address" readonly autocomplete="off" required>
+      <div *ngIf="notifyMeForm.get('address')?.touched && notifyMeForm.get('address')?.invalid" class="message">
+        <div *ngIf="notifyMeForm.get('address')?.errors?.['required']">
+          Это поле обязательно
+        </div>
+      </div>
+      <!-- модальное окно с картой -->
+      <app-modal-dialog *ngIf="ModalDialogVisibility" (changeModalDialogVisibility)="changeModalDialogVisibility($event)"></app-modal-dialog>
+      <label for="time">Введите дату и время</label>
+      <input formControlName="time" type="datetime-local" name="time" id="time" required>
+      <div *ngIf="notifyMeForm.get('time')?.touched && notifyMeForm.get('time')?.invalid" class="message">
+        <div *ngIf="notifyMeForm.get('time')?.errors?.['required']">
+          Это поле обязательно
+        </div>
+        <div *ngIf="notifyMeForm.get('time')?.errors?.['pattern']">
+          Неверно введена дата или время
+        </div>
+      </div>
+      <!-- кнопка переключения к следующей части формы(кнопка неактивна, пока значения полей невалидны) -->
+      <a (click)="changeVisibility(mainDataForm, confirmForm)" 
+      [class.disabled]="notifyMeForm.get('email')?.invalid || notifyMeForm.get('tel')?.invalid || notifyMeForm.get('address')?.invalid || notifyMeForm.get('time')?.invalid">
+        Дальше
+      </a>
+    </div>
+    <!-- третья часть формы -->
+    <div class="confirm" #confirmForm>
+      <!-- кнопка переключения к предыдущей части формы -->
+      <a (click)="changeVisibility(confirmForm, mainDataForm)" class="go-back">&#5176; назад</a>
+      <div class="checkbox__item">
+        <input formControlName="personalData" type="checkbox" name="personal-data" id="personal-data" required>
+        <label for="personal-data">Подтверждаю согласие на обработку персональных данные</label>
+      </div>
+      <div class="checkbox__item">
+        <input formControlName="notifyMe" type="checkbox" name="notify-me" id="notify-me">
+        <label for="notify-me">Оповещать, если по данному адресу найдены происшествия</label>
+      </div>
+      <button (click)="changeVisibility(confirmForm, initialDataForm)" [disabled]="notifyMeForm.invalid" type="submit">Отправить</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,8 @@
+<agm-map [latitude]="lat" [longitude]="lng" (mapClick)="setMarker($event)">
+  <agm-marker [latitude]="lat" [longitude]="lng" *ngIf="isMarkerSet"></agm-marker>
+</agm-map>
+<p>{{address}}</p>
+<div class="actions">
+  <a (click)="action('close')">Отмена</a>
+  <a (click)="action('confirm')">Подтвердить</a>
+</div>
